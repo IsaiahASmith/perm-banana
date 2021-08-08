@@ -13,6 +13,9 @@ class Permission:
     def __invert__(self):
         return Permission(~self.permissions)
 
+    def __contains__(self, item):
+        return not bool(item - self)
+
     def __and__(self, other):
         return Permission(self.permissions & other.permissions)
 

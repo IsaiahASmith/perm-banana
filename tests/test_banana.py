@@ -1,27 +1,16 @@
-from Perm import Perm
 from Check import Check
+from Permission import Permission
 from banana import banana
 
 
 def test_init():
-    @banana({})
+    @banana
     class Test:
         def __init__(self, test):
             self.test = test
 
     test = Test(0)
     assert test.test == 0
-
-
-def test_with_check():
-    @banana({Perm("test", Check(lambda *_: True))})
-    class Test:
-        def __init__(self, test):
-            self.test2 = test
-
-    test = Test(0)
-    assert test.test2 == 0
-    assert test.test
 
 
 def test_inside_class():
@@ -33,6 +22,20 @@ def test_inside_class():
 
     test = Test(0)
     assert test.test2 == 0
+    assert test.test
+
+
+def test_inside_from_int():
+    @banana
+    class Test:
+        test: int = 0b1100
+
+        def __init__(self, perms):
+            self.permissions = perms
+
+    test = Test(Permission(0))
+    assert not test.test
+    test.permissions = Permission(0b1100)
     assert test.test
 
 
