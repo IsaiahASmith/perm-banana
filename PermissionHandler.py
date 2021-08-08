@@ -1,14 +1,14 @@
 from typing import Dict, Union
 
-from .Permission import Permission
+from Permission import Permission
 
 
 class PermissionHandler:
     """Finds the given permissions of a user and contains them for their respective"""
 
-    def __init__(self, permission: Permission, children: Dict[int, "PermissionHandler"]):
+    def __init__(self, permission: Permission, children: Dict[int, "PermissionHandler"] = None):
         self.permission = permission
-        self.children = children
+        self.children = {} if children is None else children
 
     @property
     def permissions(self) -> Dict[int, Union["PermissionHandler", Permission]]:
@@ -16,29 +16,37 @@ class PermissionHandler:
         return {0: self.permission, **self.children}
 
     def __bool__(self) -> bool:
-        return all(bool(permission) for permission in self.permissions.values())
+        for permission in self.permissions.values():
+            if permission:
+                return True
+        return False
 
     def __invert__(self):
-        self.permission = ~self.permission
-        temp_children = {}
+        permission = ~self.permission
+        children = {}
 
         for key, child in self.children.items():
-            temp_children[key] = ~child
+            children[key] = ~child
 
-        self.children = temp_children
+        return PermissionHandler(permission, children)
 
     def __and__(self, other):
         children_keys = set(self.children.keys()).intersection(other.children.keys())
 
         return PermissionHandler(
-            self.permission & other.permissions,
+            self.permission & other.permission,
             {key: self.children[key] & other.children[key] for key in children_keys},
         )
 
     def __iand__(self, other):
         children_keys = set(self.children.keys()).intersection(other.children.keys())
 
-        self.permission &= other.permissions
+        # If a key is only present on the left side, delete it
+        only_left_keys = set(self.children.keys()).difference(children_keys)
+        for key in only_left_keys:
+            del self.children[key]
+
+        self.permission &= other.permission
         for key in children_keys:
             self.children[key] &= other.children[key]
 
@@ -55,11 +63,18 @@ class PermissionHandler:
             else:
                 children.update({key: other.children[key]})
 
-        return PermissionHandler(self.permission | other.permissions, children)
+        return PermissionHandler(self.permission | other.permission, children)
 
     def __ior__(self, other):
         self.permission |= other.permission
-        self.children
+        both = {*self.children.keys(), *other.children.keys()}
+        for key in both:
+            if key in self.children and key in other.children:
+                self.children.update({key: self.children[key] | other.children[key]})
+            elif key in self.children:
+                self.children.update({key: self.children[key]})
+            else:
+                self.children.update({key: other.children[key]})
         return self
 
     def __add__(self, other):
