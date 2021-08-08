@@ -49,3 +49,15 @@ def test_inside_instance():
     assert test.test
     assert not test2.test2
     assert not test2.test
+
+
+def test_updates_dynamically():
+    class Test:
+        test = Check(lambda self: getattr(self, "test2"))
+
+        def __init__(self, test):
+            self.test2 = test
+
+    test = Test(True)
+    test.test2 = False
+    assert not test.test
