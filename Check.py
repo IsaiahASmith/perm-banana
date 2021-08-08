@@ -1,16 +1,18 @@
-from typing import Callable, Any, Optional
+from typing import TypeVar, Callable, Any, Optional
 
-from Permission import Permission
+
+T = TypeVar("T")
+V = TypeVar("V")
 
 
 class Check(object):
-    fget: Callable[[Permission], bool]
-
-    def __init__(self, fget: Callable[[Any], Any], doc: str = ""):
+    def __init__(self, fget: Callable[[Any], V], doc: str = "") -> None:
         self.fget = fget
         if doc is None:
             doc = fget.__doc__
         self.__doc__ = doc
 
-    def __get__(self, obj: Permission, type: Optional[type]) -> bool:
+    def __get__(self, obj: Optional[T], type: Optional[T]) -> V:
+        if obj is None:
+            return self
         return self.fget(obj)
