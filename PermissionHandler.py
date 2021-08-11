@@ -15,6 +15,12 @@ class PermissionHandler:
         """Finds all valid permission of itself and its children"""
         return {0: self.permission, **self.children}
 
+    def __repr__(self) -> str:
+        if len(self.children):
+            return f"{self.__class__.__name__}({self.permission}, children={self.children})"
+        else:
+            return f"{self.__class__.__name__}({self.permission})"
+
     def __bool__(self) -> bool:
         for permission in self.permissions.values():
             if permission:
