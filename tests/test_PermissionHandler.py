@@ -102,6 +102,14 @@ def test_ior():
     assert Permission(0b0001) == handler_right.children[1].permission
 
 
+def test_ior_mismatch():
+    handler_left = PermissionHandler(Permission(0b1000), {2: PermissionHandler(Permission(0b1000))})
+    handler_right = PermissionHandler(Permission(0b0001), {1: PermissionHandler(Permission(0b0001))})
+    handler_left |= handler_right
+    assert Permission(0b0001) == handler_left.children[1].permission
+    assert Permission(0b1000) == handler_left.children[2].permission
+
+
 def test_add():
     handler_left = PermissionHandler(Permission(0b1000), {1: PermissionHandler(Permission(0b1000))})
     handler_right = PermissionHandler(Permission(0b0001), {1: PermissionHandler(Permission(0b0001))})
@@ -114,6 +122,16 @@ def test_add():
     assert Permission(0b1001) == handler_and.children[1].permission
 
 
+def test_add_mismatch():
+    handler_left = PermissionHandler(Permission(0b1000), {2: PermissionHandler(Permission(0b1000))})
+    handler_right = PermissionHandler(Permission(0b0001), {1: PermissionHandler(Permission(0b0001))})
+    handler_and = handler_left + handler_right
+    assert Permission(0b1000) == handler_left.children[2].permission
+    assert Permission(0b0001) == handler_right.children[1].permission
+    assert Permission(0b0001) == handler_and.children[1].permission
+    assert Permission(0b1000) == handler_and.children[2].permission
+
+
 def test_iadd():
     handler_left = PermissionHandler(Permission(0b1000), {1: PermissionHandler(Permission(0b1000))})
     handler_right = PermissionHandler(Permission(0b0001), {1: PermissionHandler(Permission(0b0001))})
@@ -122,6 +140,14 @@ def test_iadd():
     assert Permission(0b0001) == handler_right.permission
     assert Permission(0b1001) == handler_left.children[1].permission
     assert Permission(0b0001) == handler_right.children[1].permission
+
+
+def test_iadd_mismatch():
+    handler_left = PermissionHandler(Permission(0b1000), {2: PermissionHandler(Permission(0b1000))})
+    handler_right = PermissionHandler(Permission(0b0001), {1: PermissionHandler(Permission(0b0001))})
+    handler_left += handler_right
+    assert Permission(0b0001) == handler_left.children[1].permission
+    assert Permission(0b1000) == handler_left.children[2].permission
 
 
 def test_sub():
@@ -136,6 +162,17 @@ def test_sub():
     assert Permission(0b0010) == handler_sub.children[1].permission
 
 
+def test_sub_mismatch():
+    handler_left = PermissionHandler(Permission(0b1010), {2: PermissionHandler(Permission(0b1010))})
+    handler_right = PermissionHandler(Permission(0b1100), {1: PermissionHandler(Permission(0b1100))})
+    handler_sub = handler_left - handler_right
+    print(handler_sub)
+    assert Permission(0b1010) == handler_left.children[2].permission
+    assert Permission(0b1100) == handler_right.children[1].permission
+    assert 1 not in handler_sub.children
+    assert Permission(0b1010) == handler_sub.children[2].permission
+
+
 def test_isub():
     handler_left = PermissionHandler(Permission(0b1110), {1: PermissionHandler(Permission(0b1110))})
     handler_right = PermissionHandler(Permission(0b1101), {1: PermissionHandler(Permission(0b1101))})
@@ -144,6 +181,14 @@ def test_isub():
     assert Permission(0b1101) == handler_right.permission
     assert Permission(0b0010) == handler_left.children[1].permission
     assert Permission(0b1101) == handler_right.children[1].permission
+
+
+def test_isub_mismatch():
+    handler_left = PermissionHandler(Permission(0b1010), {2: PermissionHandler(Permission(0b1010))})
+    handler_right = PermissionHandler(Permission(0b1100), {1: PermissionHandler(Permission(0b1100))})
+    handler_left -= handler_right
+    assert 1 not in handler_left.children
+    assert Permission(0b1010) == handler_left.children[2].permission
 
 
 def test_eq():
