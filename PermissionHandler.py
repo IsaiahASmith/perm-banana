@@ -1,4 +1,5 @@
 from typing import Dict, Union
+from copy import deepcopy
 
 from Permission import Permission
 
@@ -91,10 +92,28 @@ class PermissionHandler:
         return self
 
     def __sub__(self, other):
-        return self & ~other
+        res = self & ~other
+
+        # If nothing is inside other, then it gets added by default
+        # Because this is a copy, the permissions must be deep copied
+        children_keys = set(self.children.keys()).intersection(other.children.keys())
+        only_left_keys = set(self.children.keys()).difference(children_keys)
+
+        for key in only_left_keys:
+            res.children[key] = deepcopy(self.children[key])
+
+        return res
 
     def __isub__(self, other):
+        # If nothing is inside other, then it gets added by default
+        children_keys = set(self.children.keys()).intersection(other.children.keys())
+        only_left_keys = set(self.children.keys()).difference(children_keys)
+        left_dict = {key: self.children[key] for key in only_left_keys}
+
         self &= ~other
+        for key, value in left_dict.items():
+            self.children[key] = value
+
         return self
 
     def __eq__(self, other):
