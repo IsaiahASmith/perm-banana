@@ -4,6 +4,9 @@ class Permission:
     def __init__(self, permissions: int):
         self.permissions = permissions
 
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}({bin(self.permissions)})"
+
     def __int__(self) -> int:
         return self.permissions
 
