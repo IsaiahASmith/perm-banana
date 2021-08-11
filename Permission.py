@@ -1,3 +1,6 @@
+from copy import deepcopy
+
+
 class Permission:
     """A series of permissions, represented as an int"""
 
@@ -6,6 +9,12 @@ class Permission:
 
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}({bin(self.permissions)})"
+
+    def __copy__(self) -> "Permission":
+        return Permission(self.permissions)
+
+    def __deepcopy__(self, memo) -> "Permission":
+        return Permission(deepcopy(self.permissions, memo))
 
     def __int__(self) -> int:
         return self.permissions
