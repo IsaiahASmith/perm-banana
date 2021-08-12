@@ -200,6 +200,15 @@ def test_eq():
     assert handler2 == handler2
 
 
+def test_eq_mismatch():
+    handler1 = PermissionHandler(Permission(0b0001), {1: PermissionHandler(Permission(0b0001))})
+    handler2 = PermissionHandler(
+        Permission(0b0001), {1: PermissionHandler(Permission(0b0001)), 2: PermissionHandler(Permission(0b1111))}
+    )
+    assert not handler1 == handler2
+    assert not handler2 == handler1
+
+
 def test_ne():
     handler1 = PermissionHandler(Permission(0b0001), {1: PermissionHandler(Permission(0b0001))})
     handler2 = PermissionHandler(Permission(0b1111), {1: PermissionHandler(Permission(0b1111))})
