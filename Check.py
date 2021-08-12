@@ -1,32 +1,15 @@
-from typing import TypeVar, Union, Callable, Any, Optional
+from typing import TypeVar
 
 from Permission import Permission
+
+from MetaCheck import MetaCheck
 
 
 T = TypeVar("T")
 
 
-class Check(object):
-    def __init__(self, fget: Callable[[Any], bool], doc: str = None) -> None:
-        self.fget = fget
-        if doc is None:
-            doc = fget.__doc__
-        self.__doc__ = doc
-
-    def __get__(self, obj: Optional[T], type: Optional[T]) -> Union[bool, "Check"]:
-        if obj is None:
-            return self
-        return self.fget(obj)
-
-    def __set__(self, obj: Optional[T], value) -> None:
-        raise AttributeError("Cannot change the value")
-
-    @classmethod
-    def from_int(cls, permission: int, permission_name: str = "permissions"):
-        return cls.from_permission(Permission(permission), permission_name)
-
-    @classmethod
-    def from_permission(cls, permission: Permission, permission_name: str = "permissions"):
+class Check(MetaCheck):
+    def __init__(self, permission: Permission, permission_name: str = "permissions") -> None:
         def check_permission(obj):
             """
             Checks against the permission of a class.
@@ -38,4 +21,8 @@ class Check(object):
                 raise AttributeError(f"{obj} has no variable {permission_name} to check")
             return permission in current_permissions
 
-        return cls(check_permission)
+        super().__init__(check_permission)
+
+    @classmethod
+    def from_int(cls, permission: int, permission_name: str = "permissions"):
+        return cls(Permission(permission), permission_name)
