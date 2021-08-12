@@ -117,7 +117,9 @@ class PermissionHandler:
         return self
 
     def __eq__(self, other):
-        if not self.permissions == other.permissions:
+        if not self.permission == other.permission:
+            return False
+        if set(self.children.keys()) != set(other.children.keys()):
             return False
         for key in self.children.keys():
             if key not in other.children or self.children[key] != other.children[key]:
