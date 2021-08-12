@@ -1,4 +1,4 @@
-from Check import Check
+from MetaCheck import MetaCheck
 from Permission import Permission
 from banana import banana
 
@@ -15,7 +15,7 @@ def test_init():
 
 def test_inside_class():
     class Test:
-        test = Check(lambda *_: True)
+        test = MetaCheck(lambda *_: True)
 
         def __init__(self, test):
             self.test2 = test
@@ -41,7 +41,7 @@ def test_inside_from_int():
 
 def test_inside_instance():
     class Test:
-        test = Check(lambda self: getattr(self, "test2"))
+        test = MetaCheck(lambda self: getattr(self, "test2"))
 
         def __init__(self, test):
             self.test2 = test
@@ -56,7 +56,7 @@ def test_inside_instance():
 
 def test_updates_dynamically():
     class Test:
-        test = Check(lambda self: getattr(self, "test2"))
+        test = MetaCheck(lambda self: getattr(self, "test2"))
 
         def __init__(self, test):
             self.test2 = test
