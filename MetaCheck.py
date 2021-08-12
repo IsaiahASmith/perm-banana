@@ -16,5 +16,5 @@ class MetaCheck:
             return self
         return self.fget(obj)
 
-    def __set__(self, obj: Optional[T], value) -> None:
+    def __set__(self, obj, value) -> None:
         raise AttributeError("Cannot change the value")
