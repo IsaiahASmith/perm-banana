@@ -14,4 +14,4 @@ class StrategyHandler(StrategyCheck):
         If the handler provided are inside the monitored handler, then
         the method will yield True.
         """
-        return bool(permission - self.check.permission)
+        return not bool(self.check.permission - permission)
