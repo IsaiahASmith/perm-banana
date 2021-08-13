@@ -1,25 +1,30 @@
+from typing import Optional, Union
+
 from Permission import Permission
+from PermissionHandler import PermissionHandler
 from MetaCheck import MetaCheck
 from NameConflictException import NameConflictException
 
+from CheckStrategy.Strategy import Strategy
+
+
+Perm = Union[Permission, PermissionHandler]
+
 
 class Check(MetaCheck):
-    def __init__(self, permission: Permission, permission_name: str = "permissions") -> None:
+    def __init__(
+        self, permission: Perm, permission_name: str = "permissions", strategy: Optional[Strategy] = None
+    ) -> None:
+
         self._permission = permission
         self._permission_name = permission_name
 
-        def check_permission(obj):
-            """
-            Checks against the permission of a class.
-            If the permissions provided from the decorator are inside the current instance's
-            permissions, then True will be provided, otherwise False.
-            """
-            current_permissions = getattr(obj, self._permission_name, None)
-            if current_permissions is None:
-                raise AttributeError(f"{obj} has no variable {self._permission_name} to check")
-            return self._permission in current_permissions
+        # To prevent a circular import, we import inside the class.
+        if not strategy:
+            from CheckStrategy.StrategyPermissions import StrategyPermissions
 
-        super().__init__(check_permission)
+            strategy = StrategyPermissions(self)
+        super().__init__(strategy.strategy)
 
     def __repr__(self) -> str:
         if self._permission_name == "permissions":
@@ -40,3 +45,11 @@ class Check(MetaCheck):
     @classmethod
     def from_int(cls, permission: int, permission_name: str = "permissions"):
         return cls(Permission(permission), permission_name)
+
+    @property
+    def permission(self) -> Perm:
+        return self._permission
+
+    @property
+    def permission_name(self) -> str:
+        return self._permission_name
