@@ -166,7 +166,6 @@ def test_sub_mismatch():
     handler_left = PermissionHandler(Permission(0b1010), {2: PermissionHandler(Permission(0b1010))})
     handler_right = PermissionHandler(Permission(0b1100), {1: PermissionHandler(Permission(0b1100))})
     handler_sub = handler_left - handler_right
-    print(handler_sub)
     assert Permission(0b1010) == handler_left.children[2].permission
     assert Permission(0b1100) == handler_right.children[1].permission
     assert 1 not in handler_sub.children
