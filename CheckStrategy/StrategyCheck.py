@@ -35,7 +35,11 @@ class StrategyCheck(Strategy, ABC):
         the attribute _permission_name.  If it fails to find the permission, an error
         will be raised.
         """
-        current_permissions = getattr(object, self.check.permission_name, None)
+        if getattr(object, "__banana", False):
+            # The object itself is the Permission or Handler!
+            current_permissions = object
+        else:
+            current_permissions = getattr(object, self.check.permission_name, None)
         if current_permissions is None:
             raise AttributeError(f"{object} has no variable {self.check.permission_name} to check")
         return current_permissions
