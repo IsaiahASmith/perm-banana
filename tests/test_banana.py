@@ -28,16 +28,13 @@ def test_inside_class():
 
 def test_inside_from_checks():
     @banana
-    class Test:
+    class Test(Permission):
         test0 = Check(Permission(0b0001))
         test1 = Check(Permission(0b0010))
         test_both = test0 | test1
         test2 = Check(Permission(0b0101))
         test3 = Check(Permission(0b0110))
         test_and = test2 & test3
-
-        def __init__(self, perms):
-            self.permissions = Permission(perms)
 
     test = Test(0)
     assert not test.test0
@@ -65,13 +62,10 @@ def test_inside_from_checks():
 
 def test_inside_from_int():
     @banana
-    class Test:
+    class Test(Permission):
         test0: int = 0b0001
         test1: int = 0b0010
         test_both: int = test0 | test1
-
-        def __init__(self, perms):
-            self.permissions = Permission(perms)
 
     test = Test(0)
     assert not test.test0
@@ -115,4 +109,15 @@ def test_updates_dynamically():
 
     test = Test(True)
     test.test2 = False
+    assert not test.test
+
+
+def test_from_checks_permission():
+    @banana
+    class Test(Permission):
+        test = Check(Permission(1))
+
+    test = Test.from_checks(Test.test)
+    assert test.test
+    test = Test.from_checks()
     assert not test.test
