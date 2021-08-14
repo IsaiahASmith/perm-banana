@@ -1,8 +1,16 @@
 [tool.poetry]
 name = "perm-banana"
 version = "0.1.0"
-description = ""
+description = "A Bitwise Permission Handler"
 authors = ["TheJoeSmo <joesmo.joesmo12@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/TheJoeSmo/perm-banana"
+repository = "https://github.com/TheJoeSmo/perm-banana"
+keywords = ["permissions", "bitwise"]
+include = [
+    "LICENSE",
+]
 
 [tool.poetry.dependencies]
 python = "^3.7"
