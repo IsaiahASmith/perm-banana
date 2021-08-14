@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "perm-banana"
+name = "perm_banana"
 version = "0.1.0"
 description = "A Bitwise Permission Handler"
 authors = ["TheJoeSmo <joesmo.joesmo12@gmail.com>"]
