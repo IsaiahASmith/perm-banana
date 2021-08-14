@@ -1,6 +1,6 @@
-from CheckStrategy.StrategyCheck import StrategyCheck
+from .StrategyCheck import StrategyCheck
 
-from PermissionHandler import PermissionHandler
+from ..PermissionHandler import PermissionHandler
 
 
 class StrategyHandler(StrategyCheck):

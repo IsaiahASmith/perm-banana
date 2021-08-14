@@ -1,9 +1,9 @@
 from typing import TypeVar, Any
 from abc import ABC, abstractmethod
 
-from CheckStrategy.Strategy import Strategy
+from .Strategy import Strategy
 
-from Check import Check
+from ..Check import Check
 
 
 T = TypeVar("T")

@@ -1,7 +1,7 @@
 from typing import Dict, Union
 from copy import deepcopy
 
-from Permission import Permission
+from .Permission import Permission
 
 
 class PermissionHandler:
