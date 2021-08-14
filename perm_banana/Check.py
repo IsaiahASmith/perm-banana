@@ -1,11 +1,11 @@
 from typing import Optional, Union
 
-from Permission import Permission
-from PermissionHandler import PermissionHandler
-from MetaCheck import MetaCheck
-from NameConflictException import NameConflictException
+from .Permission import Permission
+from .PermissionHandler import PermissionHandler
+from .MetaCheck import MetaCheck
+from .NameConflictException import NameConflictException
 
-from CheckStrategy.Strategy import Strategy
+from .CheckStrategy.Strategy import Strategy
 
 
 Perm = Union[Permission, PermissionHandler]
@@ -21,7 +21,7 @@ class Check(MetaCheck):
 
         # To prevent a circular import, we import inside the class.
         if not strategy:
-            from CheckStrategy.StrategyPermissions import StrategyPermissions
+            from .CheckStrategy.StrategyPermissions import StrategyPermissions
 
             strategy = StrategyPermissions(self)
         super().__init__(strategy.strategy)

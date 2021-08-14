@@ -1,8 +1,8 @@
 from typing import Type, Optional
 
-from PermissionHandler import PermissionHandler
-from Permission import Permission
-from Check import Check, Perm
+from .PermissionHandler import PermissionHandler
+from .Permission import Permission
+from .Check import Check, Perm
 
 
 def get_check(cls, name) -> Optional[Check]:

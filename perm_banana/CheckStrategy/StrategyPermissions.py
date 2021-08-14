@@ -1,8 +1,8 @@
 from typing import Union
 
-from Check import Check
-from Permission import Permission
-from PermissionHandler import PermissionHandler
+from ..Check import Check
+from ..Permission import Permission
+from ..PermissionHandler import PermissionHandler
 
 from .StrategyCheck import StrategyCheck
 from .StrategyHandler import StrategyHandler

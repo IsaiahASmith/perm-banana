@@ -1,4 +1,4 @@
-from Permission import Permission
+from perm_banana.Permission import Permission
 
 
 def test_initialization():

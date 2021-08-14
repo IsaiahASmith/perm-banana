@@ -1,7 +1,7 @@
-from MetaCheck import MetaCheck
-from Check import Check
-from Permission import Permission
-from banana import banana
+from perm_banana.MetaCheck import MetaCheck
+from perm_banana.Check import Check
+from perm_banana.Permission import Permission
+from perm_banana.banana import banana
 
 
 def test_init():

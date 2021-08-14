@@ -1,6 +1,6 @@
-from Check import Check
-from Permission import Permission
-from PermissionHandler import PermissionHandler
+from perm_banana.Check import Check
+from perm_banana.Permission import Permission
+from perm_banana.PermissionHandler import PermissionHandler
 
 
 def test_check_initialization():
