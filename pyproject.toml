@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "perm_banana"
-version = "0.2.0"
+version = "0.2.1"
 description = "A Bitwise Permission Handler"
 authors = ["TheJoeSmo <joesmo.joesmo12@gmail.com>"]
 license = "MIT"

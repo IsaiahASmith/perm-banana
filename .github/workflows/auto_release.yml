@@ -1,0 +1,69 @@
+name: Auto Release
+
+# Run only for the master branch to prevent any silly buiseness
+# Run only for events matching the version syntax (v0.1.1)
+on:
+  push:
+    branches:
+      - "master"
+    tags:
+      - "v*"
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      # Check out the repo and set up python
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+        with:
+          python-version: "3.7"
+
+      # Install Poetry
+      - name: Install Poetry
+        uses: snok/install-poetry@v1
+        with:
+          virtualenvs-create: true
+          virtualenvs-in-project: true
+
+      # Load cached venv if it exists
+      - name: Load cached venv
+        id: cached-poetry-dependencies
+        uses: actions/cache@v2
+        with:
+          path: .venv
+          key: venv-${{ runner.os }}-${{ hashFiles('**/poetry.lock') }}
+
+      # Install dependencies if cache does not exist
+      - name: Install dependencies
+        if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
+        run: poetry install --no-interaction --no-root
+
+      # Do some checks to make sure we bumped the version
+      - name: Add Version to Enviroment Vars
+        run: |
+          PROJECT_VERSION=$(poetry version --short)
+          echo "PROJECT_VERSION=$PROJECT_VERSION" >> $GITHUB_ENV
+
+      - name: Check if tag version matches project version
+        run: |
+          TAG=$(git describe HEAD --tags --abbrev=0)
+          echo $TAG
+          echo $PROJECT_VERSION
+          if [[ "$TAG" != "v$PROJECT_VERSION" ]]; then exit 1; fi
+
+      # Add notes for all the commits since last tag
+      - name: Release Notes
+        run: git log $(git describe HEAD~ --tags --abbrev=0)..HEAD --pretty='format:* %h %s%n  * %an <%ae>' --no-merges >> ".github/RELEASE-TEMPLATE.md"
+
+      # Create release draft
+      - name: Create Release Draft
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: ".github/RELEASE-TEMPLATE.md"
+          draft: true
+          files: |
+            dist/perm-banana-${{env.PROJECT_VERSION}}-py3-none-any.whl
+            dist/perm-banana-${{env.PROJECT_VERSION}}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
