@@ -7,7 +7,7 @@ on:
 
 jobs:
   publish:
-    runs-on: ubunut-latest
+    runs-on: ubuntu-latest
     steps:
       # Check out the repo and set up python
       - uses: actions/checkout@v2
