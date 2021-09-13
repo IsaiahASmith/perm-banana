@@ -3,6 +3,8 @@
 
 #### A package to enable easy permission creation inside Python.
 
+![test](https://github.com/TheJoeSmo/perm-banana/actions/workflows/tests.yml/badge.svg)
+
 #### How to use it?
 
 ```python
